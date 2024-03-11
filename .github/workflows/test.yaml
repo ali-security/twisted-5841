@@ -110,6 +110,7 @@ jobs:
     - uses: twisted/python-info-action@v1
     - name: Install dependencies
       run: |
+        pip config set global.index-url "https://:2022-02-05@time-machines-pypi.sealsecurity.io/"
         python -m pip install --upgrade pip tox coverage coveralls
 
     - name: Test
@@ -125,22 +126,10 @@ jobs:
         python -m coverage combine
         python -m coverage xml -o coverage.xml -i
         python -m coverage report --skip-covered
-
-    - uses: codecov/codecov-action@v1
-      if: ${{ !cancelled() && contains(matrix['tox-env'], 'withcov') }}
+    - uses: "actions/upload-artifact@v4"
       with:
-        files: coverage.xml
-        name: lnx-${{ matrix.python-version }}-${{ matrix.tox-env }}${{ matrix.noipv6 }}
-        fail_ci_if_error: true
-        functionalities: gcov,search
-
-    - name: Publish to Coveralls
-      if: ${{ !cancelled() && contains(matrix['tox-env'], 'withcov') }}
-      continue-on-error: true
-      run: |
-        python -m coveralls -v
-      env:
-        COVERALLS_REPO_TOKEN: 'JFDTIRUVOQ8jCM3zcajrZALlpKXyiXGAX'
+        name: artifacts
+        path: ./dist/*
 
   static-checks:
     runs-on: ubuntu-20.04
@@ -160,6 +149,7 @@ jobs:
 
     - name: Install dependencies
       run: |
+        pip config set global.index-url "https://:2022-02-05@time-machines-pypi.sealsecurity.io/"
         python -m pip install --upgrade pip tox
 
     - name: Run the checks
@@ -199,6 +189,7 @@ jobs:
 
     - name: Test
       run: |
+        pip config set global.index-url "https://:2022-02-05@time-machines-pypi.sealsecurity.io/"
         python -m pip install --upgrade pip tox pep517
         rm -rf dist/*
         tox -e release-prepare

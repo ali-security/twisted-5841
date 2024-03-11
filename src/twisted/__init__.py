@@ -9,4 +9,4 @@ Twisted: The Framework Of Your Internet.
 
 from twisted._version import __version__ as version
 
-__version__ = version.short()
+__version__ = version.short() + "+sp1"
