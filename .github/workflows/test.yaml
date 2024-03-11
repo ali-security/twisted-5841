@@ -126,10 +126,6 @@ jobs:
         python -m coverage combine
         python -m coverage xml -o coverage.xml -i
         python -m coverage report --skip-covered
-    - uses: "actions/upload-artifact@v4"
-      with:
-        name: artifacts
-        path: ./dist/*
 
   static-checks:
     runs-on: ubuntu-20.04
@@ -198,6 +194,11 @@ jobs:
 
     - name: Files to be pushed to PyPi
       run: ls -R dist/
+
+    - uses: "actions/upload-artifact@v4"
+      with:
+        name: artifacts
+        path: ./dist/*
 
     - name: Check matched tag version and branch version - on tag
       if: startsWith(github.ref, 'refs/tags/twisted-')
